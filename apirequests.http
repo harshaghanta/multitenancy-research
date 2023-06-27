@@ -1,0 +1,6 @@
+GET http://localhost:8080/tenant HTTP/1.1
+X-TenantId: dukes
+
+####
+GET http://localhost:8080/tenant HTTP/1.1
+X-TenantId: beans
