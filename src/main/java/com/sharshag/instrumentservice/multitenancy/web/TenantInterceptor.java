@@ -1,13 +1,16 @@
 package com.sharshag.instrumentservice.multitenancy.web;
 
+import org.slf4j.MDC;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.ServerHttpObservationFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sharshag.instrumentservice.multitenancy.context.TenantContext;
 import com.sharshag.instrumentservice.multitenancy.resolver.HttpHeaderTenantResolver;
 
+import io.micrometer.common.KeyValue;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,8 @@ public class TenantInterceptor implements HandlerInterceptor {
 
         String resolveTenantId = tenantResolver.resolveTenantId(request);
         TenantContext.setTenantId(resolveTenantId);
+        MDC.put("tenantId", resolveTenantId);
+        ServerHttpObservationFilter.findObservationContext(request).ifPresent(context -> context.addHighCardinalityKeyValue(KeyValue.of("tenant.id",resolveTenantId)));
         return true;
     }
 
@@ -43,5 +48,6 @@ public class TenantInterceptor implements HandlerInterceptor {
 
     private void clear() {
         TenantContext.clear();
+        MDC.clear();
     }
 }

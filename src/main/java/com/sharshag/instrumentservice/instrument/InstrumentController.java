@@ -2,6 +2,7 @@ package com.sharshag.instrumentservice.instrument;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,8 @@ public class InstrumentController {
         return instrumentRepository.findAll();
     }
 
-    @GetMapping("{type}")
+    @GetMapping("/{type}")
+    @Cacheable(cacheNames = "instrumentTypes", keyGenerator = "tenantKeyGenerator")
     List<Instrument> getInstrumentByType(@PathVariable String type) {
         log.info("Returning instrument of type: {}", type);
         return instrumentRepository.findByType(type);

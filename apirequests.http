@@ -1,6 +1,32 @@
-GET http://localhost:8080/tenant HTTP/1.1
+GET http://localhost:8181/tenant HTTP/1.1
 X-TenantId: dukes
 
 ####
-GET http://localhost:8080/tenant HTTP/1.1
+GET http://localhost:8181/tenant HTTP/1.1
+X-TenantId: beans
+
+###
+GET http://localhost:8181/instruments HTTP/1.1
+X-TenantId: dukes
+
+###
+GET http://localhost:8181/instruments HTTP/1.1
+X-TenantId: beans
+
+###
+POST http://localhost:8181/instruments HTTP/1.1
+X-TenantId: dukes
+Content-Type: application/json
+
+{
+    "name" : "Steinway",
+    "type" : "piano"
+}
+
+###
+GET http://localhost:8181/instruments/piano HTTP/1.1
+X-TenantId: dukes
+
+###
+GET http://localhost:8181/instruments/piano HTTP/1.1
 X-TenantId: beans
